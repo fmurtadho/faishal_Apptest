@@ -8,12 +8,22 @@ import {
 } from 'react-native';
 
 class ContactListPage extends Component {
+  componentDidMount() {
+    return this.fetchData();
+  }
+
+  fetchData = async () => {
+    const { getContactList } = this.props;
+
+    await getContactList();
+  }
 
   render() {
+    const { contactList, loading } = this.props;
     return (
       <View>
         <Text>
-          ContactListPage
+          {JSON.stringify(contactList)}
         </Text>
       </View>
     );
