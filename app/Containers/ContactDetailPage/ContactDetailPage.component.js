@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
   View,
+  Button,
   Alert,
   ScrollView,
   ActivityIndicator,
@@ -15,7 +16,7 @@ import {
 import { Styles } from './ContactDetailPage.component.style';
 import { Colors } from '../../Theme';
 import { ContactDetailImage } from '../../Components/ContactDetailImage/ContactDetailImage.component';
-import { CustomTextInput } from '../../Components/CustomTextInput/CustomTextInput.component'
+import { CustomTextInput } from '../../Components/CustomTextInput/CustomTextInput.component';
 
 class ContactDetailPage extends Component {
   constructor(props) {
@@ -30,8 +31,20 @@ class ContactDetailPage extends Component {
   }
 
   componentDidMount() {
+    this.setupOnPressSave();
     return this.fetchContact();
   }
+
+  setupOnPressSave = () => {
+    const { navigation: { setParams, getParam } } = this.props;
+    const isNewContact = getParam('new', false);
+
+    if (isNewContact) {
+      return setParams({ onPressSave: this.onPressSave });
+    }
+
+    return setParams({ onPressSave: this.onPressEdit });
+  };
 
   fetchContact = async () => {
     const { navigation: { getParam }, getContact } = this.props;
@@ -62,7 +75,139 @@ class ContactDetailPage extends Component {
     return false;
   };
 
-  onChangeText = () => {};
+  onChangeText = (text, name) => this.setState({
+    [name]: text,
+  }, this.checkValue);
+
+  checkValue = () => {
+    const { contactDetail, navigation: { setParams } } = this.props;
+    const {
+      firstName,
+      lastName,
+      age,
+      photo,
+    } = this.state;
+
+    if (firstName !== contactDetail.firstName) {
+      return setParams({ isEditing: true });
+    }
+
+    if (lastName !== contactDetail.lastName) {
+      return setParams({ isEditing: true });
+    }
+
+    if (Number(age) !== Number(contactDetail.age)) {
+      return setParams({ isEditing: true });
+    }
+
+    if (photo !== contactDetail.photo) {
+      return setParams({ isEditing: true });
+    }
+
+    return setParams({ isEditing: false });
+  };
+
+  handleResponse = () => {
+    const {
+      message,
+      error,
+      errorMessage,
+      getContactList,
+      navigation: {
+        pop,
+      },
+    } = this.props;
+
+    if (error) {
+      return Alert.alert('ERROR', errorMessage);
+    }
+
+    const successAlertButtons = [{
+      text: 'OK',
+      onPress: () => {
+        getContactList();
+        return pop(1);
+      },
+      style: 'default',
+    }];
+
+    const successAlertOptions = {
+      cancelable: true,
+      onDismiss: () => {
+        getContactList();
+        return pop(1);
+      },
+    };
+
+    return Alert.alert('SUCCESS', message, successAlertButtons, successAlertOptions);
+  };
+
+  onPressSave = async () => {
+    const {
+      firstName,
+      lastName,
+      age,
+      photo,
+    } = this.state;
+    const { postContact } = this.props;
+
+    await postContact({
+      firstName,
+      lastName,
+      age: Number(age),
+      photo,
+    });
+
+    return this.handleResponse();
+  };
+
+  onPressDelete = async () => {
+    const { id } = this.state;
+    const { deleteContact } = this.props;
+
+    await deleteContact(id);
+
+    return this.handleResponse();
+  };
+
+  onPressEdit = async () => {
+    const { id } = this.state;
+    const { putContact } = this.props;
+    const {
+      firstName,
+      lastName,
+      age,
+      photo,
+    } = this.state;
+
+    await putContact(id, {
+      firstName,
+      lastName,
+      age: Number(age),
+      photo,
+    });
+
+    return this.handleResponse();
+  };
+
+  renderDeleteButton = () => {
+    const { navigation: { getParam } } = this.props;
+    const isNewContact = getParam('new', false);
+
+    if (!isNewContact) {
+      return (
+        <View style={Styles.deleteButtonContainer}>
+          <Button
+            color={Colors.CARAMEL.RED_LIP}
+            title="DELETE CONTACT"
+            onPress={this.onPressDelete}
+          />
+        </View>
+      );
+    }
+
+    return <View style={Styles.deleteButtonContainer} />;
+  }
 
   render() {
     const {
@@ -113,6 +258,7 @@ class ContactDetailPage extends Component {
           fieldName="photo"
           value={photo}
         />
+        {this.renderDeleteButton()}
       </ScrollView>
     );
   }
@@ -122,11 +268,15 @@ ContactDetailPage.propTypes = {
   navigation: shape({
     getParam: func.isRequired,
   }),
+  getContactList: func.isRequired,
+  postContact: func.isRequired,
+  deleteContact: func.isRequired,
+  putContact: func.isRequired,
   getContact: func.isRequired,
   error: bool.isRequired,
   errorMessage: string,
   loading: bool.isRequired,
-  message: string
+  message: string,
 };
 
 export { ContactDetailPage };
