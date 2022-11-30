@@ -12,6 +12,16 @@ import { Routes } from '../Routes';
 import ContactListPage from '../../Containers/ContactListPage/ContactListPage.container';
 import ContactDetailPage from '../../Containers/ContactDetailPage/ContactDetailPage.container';
 
+const defaultHeaderConfig = {
+  headerStyle: {
+    backgroundColor: Colors.DARK_BLUE
+  },
+  headerTitleStyle: {
+    color: 'white'
+  },
+  headerTintColor: 'white'
+};
+
 const MainStackNavigator = createStackNavigator({
   ContactListPage: {
     screen: ContactListPage,
@@ -40,6 +50,7 @@ const MainStackNavigator = createStackNavigator({
           <Text style={{ fontSize: 24, fontWeight: 'bold' }}>+</Text>
         </TouchableOpacity>
       ),
+      ...defaultHeaderConfig
     }),
   },
   ContactDetailPage: {
@@ -56,10 +67,11 @@ const MainStackNavigator = createStackNavigator({
               disabled={!isEditing && !isNewContact}
               title="save"
               onPress={onPressSave}
-              color={Colors.CARAMEL.LAKE}
+              color={Colors.TEAL}
             />
           </View>
         ),
+        ...defaultHeaderConfig
       };
     },
   },

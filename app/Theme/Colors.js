@@ -3,6 +3,8 @@ const colors = {
   WHITE: 'rgba(255, 255, 255, 2)',
   GREY_MERCURY: 'rgba(232, 232, 232, 1)',
   GREY_SOLITUDE: 'rgba(228, 233, 237, 1)',
+  DARK_BLUE: 'rgba(76, 0, 214, 1)',
+  TEAL: 'rgba(0, 150, 136, 1)',
   CARAMEL: {
     BLACKISH: 'rgba(45, 45, 43, 1)',
     WIND: 'rgba(176, 176,176, 1)',
