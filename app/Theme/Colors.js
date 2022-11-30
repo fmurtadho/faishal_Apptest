@@ -4,6 +4,7 @@ const colors = {
   GREY_MERCURY: 'rgba(232, 232, 232, 1)',
   GREY_SOLITUDE: 'rgba(228, 233, 237, 1)',
   DARK_BLUE: 'rgba(76, 0, 214, 1)',
+  DARKER_BLUE: 'rgba(68, 0, 193, 1)',
   TEAL: 'rgba(0, 150, 136, 1)',
   CARAMEL: {
     BLACKISH: 'rgba(45, 45, 43, 1)',
