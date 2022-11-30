@@ -5,6 +5,15 @@ import {
   REQ_GET_CONTACT,
   REQ_GET_CONTACT_SUCCESS,
   REQ_GET_CONTACT_FAILURE,
+  REQ_CREATE_CONTACT,
+  REQ_CREATE_CONTACT_SUCCESS,
+  REQ_CREATE_CONTACT_FAILURE,
+  REQ_EDIT_CONTACT,
+  REQ_EDIT_CONTACT_SUCCESS,
+  REQ_EDIT_CONTACT_FAILURE,
+  REQ_DELETE_CONTACT,
+  REQ_DELETE_CONTACT_SUCCESS,
+  REQ_DELETE_CONTACT_FAILURE,
 } from '../../Actions';
 
 const initialState = {
@@ -61,6 +70,73 @@ const ContactReducer = (state = initialState, action) => {
         contactDetail: {},
         loading: false,
         data: [],
+        error: true,
+        errorMessage: action.errorMessage,
+      };
+    case REQ_CREATE_CONTACT:
+      return {
+        ...state,
+        loading: true,
+        message: '',
+      };
+    case REQ_CREATE_CONTACT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        errorMessage: '',
+        message: action.payload.message,
+      };
+    case REQ_CREATE_CONTACT_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        errorMessage: action.errorMessage,
+      };
+    case REQ_EDIT_CONTACT:
+      return {
+        ...state,
+        loading: true,
+        error: false,
+        errorMessage: '',
+        message: '',
+      };
+    case REQ_EDIT_CONTACT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        errorMessage: '',
+        message: action.payload.message,
+      };
+    case REQ_EDIT_CONTACT_FAILURE:
+      return {
+        ...state,
+        loading: false,
+        error: true,
+        errorMessage: action.errorMessage,
+      };
+    case REQ_DELETE_CONTACT:
+      return {
+        ...state,
+        loading: true,
+        error: false,
+        errorMessage: '',
+        message: '',
+      };
+    case REQ_DELETE_CONTACT_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        error: false,
+        errorMessage: '',
+        message: action.payload.message,
+      };
+    case REQ_DELETE_CONTACT_FAILURE:
+      return {
+        ...state,
+        loading: false,
         error: true,
         errorMessage: action.errorMessage,
       };
