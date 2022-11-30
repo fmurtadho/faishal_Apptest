@@ -14,6 +14,7 @@ import {
 
 import { Styles } from './ContactListPage.component.style';
 import { ContactListItem } from '../../Components/ContactListItem/ContactListItem.component';
+import { Routes } from '../../Navigation';
 
 class ContactListPage extends Component {
   componentDidMount() {
@@ -32,9 +33,16 @@ class ContactListPage extends Component {
       lastName={item.lastName}
       photo={item.photo}
       id={item.id}
-      onPress={() => {}}
+      onPress={this.onPressItem(item.id)}
     />
   );
+
+  onPressItem = (id) => () => {
+    const { navigation: { navigate } } = this.props;
+
+    navigate(Routes.MainStackNavigator.ContactDetailPage, { id });
+  };
+
 
   keyExtractor = (item) => item.id;
 
